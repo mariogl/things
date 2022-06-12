@@ -1,4 +1,5 @@
-const { generalError } = require("./errors");
+const customError = require("../../utils/customError");
+const { generalError, notFoundError } = require("./errors");
 
 describe("Given a generalError function", () => {
   describe("When it's invoked", () => {
@@ -39,6 +40,19 @@ describe("Given a generalError function", () => {
         expect(res.status).toHaveBeenCalledWith(expectedStatusCode);
         expect(res.json).toHaveBeenCalledWith(expectedResponse);
       });
+    });
+  });
+});
+
+describe("Given a notFoundError", () => {
+  describe("When it's invoked with a next function", () => {
+    test("Then it should call next function with a 404 'Endpoint not found' error", () => {
+      const next = jest.fn();
+      const expectedError = customError("Endpoint not found", 404);
+
+      notFoundError(null, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
