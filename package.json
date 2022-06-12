@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src",
     "start-dev": "nodemon src -q",
-    "test": "npx jest src --watchAll",
+    "test": "npx jest src",
+    "test-dev": "npx jest --watchAll",
     "test-coverage": "npx jest src --coverage --watchAll=false",
     "prepare": "husky install"
   },
