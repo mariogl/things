@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const dbConnect = require(".");
 
 describe("Given a dbConnect function", () => {
-  describe("When it's invoked with a correct mongo URL", () => {
+  describe("When it's invoked and the connection works", () => {
     test("Then it should resolve", () => {
       mongoose.connect = (url, cb) => {
         cb(null);
@@ -14,7 +14,7 @@ describe("Given a dbConnect function", () => {
     });
   });
 
-  describe("When it's invoked with a wrong mongo URL", () => {
+  describe("When it's invoked and the connection doesn't work", () => {
     test("Then it should resolve", async () => {
       mongoose.connect = (url, cb) => {
         cb(new Error());
