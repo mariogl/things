@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 
 const dbConnect = (mongoString) =>
   new Promise((resolve, reject) => {
+    mongoose.set("debug", true);
     mongoose.connect(mongoString, (error) => {
       if (error) {
         const dbError = new Error("Error connecting to database");
