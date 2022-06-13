@@ -1,6 +1,8 @@
 name: Audit
 
-on: push
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
 
 jobs:
   audit:
@@ -30,13 +32,3 @@ jobs:
 
       - name: ESLint validation
         run: npx eslint --ignore-path .gitignore .
-
-      - name: Check commit message length
-        uses: gsactions/commit-message-checker@v1
-        with:
-          pattern: "^[^#].{10,74}"
-          error: "The commit message length must be between 10 and 72"
-          excludeDescription: "true" # optional: this excludes the description body of a pull request
-          excludeTitle: "true" # optional: this excludes the title of a pull request
-          checkAllCommitMessages: "true" # optional: this checks all commits associated with a pull request
-
