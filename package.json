@@ -21,7 +21,9 @@
     "eslint-plugin-import": "^2.26.0",
     "husky": "^7.0.0",
     "jest": "^28.1.1",
-    "nodemon": "^2.0.16"
+    "mongodb-memory-server": "^8.6.0",
+    "nodemon": "^2.0.16",
+    "supertest": "^6.2.3"
   },
   "dependencies": {
     "@types/jest": "^28.1.1",
