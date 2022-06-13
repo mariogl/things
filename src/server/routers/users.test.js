@@ -5,8 +5,14 @@ const request = require("supertest");
 const dbConnect = require("../../db");
 const User = require("../../db/models/User");
 const app = require("../server");
+const endpoints = require("../../utils/endpoints");
 
 let mongoServer;
+
+const firstUser = {
+  username: "mariotest",
+  password: "mariotest",
+};
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
@@ -15,8 +21,8 @@ beforeAll(async () => {
   await dbConnect(mongoURL);
 
   await User.create({
-    username: "mario",
-    password: await bcrypt.hash("mario", 10),
+    username: firstUser.username,
+    password: await bcrypt.hash(firstUser.password, 10),
   });
 });
 
@@ -56,11 +62,50 @@ describe("Given a POST /users/register endpoint", () => {
     test("Then it should respond with a 409 status and a 'User already exists' error", async () => {
       const { body } = await request(app)
         .post("/users/register")
-        .send({ username: "mario", password: "mario" })
+        .send(firstUser)
         .expect(409);
 
       expect(body).toHaveProperty("error", true);
       expect(body).toHaveProperty("message", "User already exists");
+    });
+  });
+});
+
+describe("Given a POST /users/login endpoint", () => {
+  const username = "mario";
+
+  describe("When it receives a request without password", () => {
+    test("Then it should respond with a 400 status and an error", async () => {
+      const { body } = await request(app)
+        .post("/users/login")
+        .send({ username })
+        .expect(400);
+
+      expect(body).toHaveProperty("error", true);
+      expect(body).toHaveProperty("message", "Bad request");
+    });
+  });
+
+  describe("When it receives a request with wrong credentials", () => {
+    test("Then it should respond with a 403 status and a 'Wrong credentials' error", async () => {
+      const { body } = await request(app)
+        .post(endpoints.users.login)
+        .send({ username: "wrong", password: "wrong" })
+        .expect(403);
+
+      expect(body).toHaveProperty("error", true);
+      expect(body).toHaveProperty("message", "Wrong credentials");
+    });
+  });
+
+  describe("When it receives a request with valid data", () => {
+    test("Then it should respond with a 200 status and a token", async () => {
+      const { body } = await request(app)
+        .post("/users/login")
+        .send(firstUser)
+        .expect(200);
+
+      expect(body).toHaveProperty("token");
     });
   });
 });
