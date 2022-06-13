@@ -1,7 +1,7 @@
 const customError = require("../../utils/customError");
-const { newUserCredentialsValidation } = require("./validations");
+const { userCredentialsValidation } = require("./validations");
 
-describe("Given a newUserCredentialsValidation function", () => {
+describe("Given a userCredentialsValidation function", () => {
   const next = jest.fn();
 
   beforeEach(() => {
@@ -17,7 +17,7 @@ describe("Given a newUserCredentialsValidation function", () => {
         },
       };
 
-      newUserCredentialsValidation(req, null, next);
+      userCredentialsValidation(req, null, next);
 
       expect(next).toHaveBeenCalledWith();
     });
@@ -36,7 +36,7 @@ describe("Given a newUserCredentialsValidation function", () => {
         '"password" is required'
       );
 
-      newUserCredentialsValidation(req, null, next);
+      userCredentialsValidation(req, null, next);
       expect(next).toHaveBeenCalledTimes(1);
       expect(next).toHaveBeenCalledWith(expectedError);
     });
