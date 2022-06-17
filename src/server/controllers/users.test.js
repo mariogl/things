@@ -59,7 +59,7 @@ describe("Given a registerUser controller", () => {
         user: newUser,
       };
 
-      await registerUser(req, res);
+      await registerUser(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatusCode);
       expect(res.json).toHaveBeenCalledWith(expectedResponse);

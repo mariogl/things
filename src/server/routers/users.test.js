@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const path = require("path");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 const mongoose = require("mongoose");
 const request = require("supertest");
@@ -8,7 +9,7 @@ const app = require("../server");
 const endpoints = require("../../utils/endpoints");
 
 let mongoServer;
-
+jest.setTimeout(10000);
 const firstUser = {
   username: "mariotest",
   password: "mariotest",
@@ -59,7 +60,7 @@ describe("Given a POST /users/register endpoint", () => {
   });
 
   describe("When it receives an existing username", () => {
-    test("Then it should respond with a 409 status and a 'User already exists' error", async () => {
+    test.only("Then it should respond with a 409 status and a 'User already exists' error", async () => {
       const { body } = await request(app)
         .post("/users/register")
         .send(firstUser)
