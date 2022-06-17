@@ -1,6 +1,8 @@
 require("dotenv").config();
+const debug = require("debug")("things-back:server:controllers:users");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const chalk = require("chalk");
 const User = require("../../db/models/User");
 const customError = require("../../utils/customError");
 
@@ -41,18 +43,12 @@ const loginUser = async (req, res, next) => {
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      const newError = customError(
-        "Wrong credentials",
-        403,
-        "Username not found"
-      );
-      throw newError;
+      throw customError("Wrong credentials", 403, "Username not found");
     }
 
     const passwordCorrect = await bcrypt.compare(password, user.password);
     if (!passwordCorrect) {
-      const newError = customError("Wrong credentials", 403, "Wrong password");
-      throw newError;
+      throw customError("Wrong credentials", 403, "Wrong password");
     }
 
     const token = jwt.sign(
@@ -72,4 +68,18 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+const updateUserAvatar = async (req) => {
+  const { userId, avatar, avatarBackup } = req;
+
+  try {
+    await User.findByIdAndUpdate(userId, {
+      avatar,
+      avatarBackup,
+    });
+  } catch (error) {
+    debug(chalk.red("Error on updating the user's avatar"));
+    debug(chalk.red(error.message));
+  }
+};
+
+module.exports = { registerUser, loginUser, updateUserAvatar };
